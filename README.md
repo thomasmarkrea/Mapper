@@ -1,7 +1,7 @@
 # Mapper
 Tool for mapping locations based on JSON input file.
 
-## Manipulating Map Data
+## Manipulating Shape Files
 
 ### Download Data
 ```bash
@@ -14,24 +14,26 @@ unzip ne_110m_admin_0_countries.zip
 
 ### Install Tools
 ```bash
-# initial install (adds to dependencies in package.json file)
-npm install -D shapefile
-npm install -D topojson
-
-# will install all dependencies from package.json file
-npm install
+# install tools
+npm install -g shapefile
+npm install -g topojson
+npm install -g ndjson-cli
 ```
 
-### Convert to GeoJSON
+### Manipulate Data
+
+Convert binary .shp file to human readable [newline-delimted](http://ndjson.org/) [GeoJSON](https://tools.ietf.org/html/rfc7946) so it's easier to work with from the command line:
 ```bash
-# convert to GeoJSON
-shp2json ne_110m_admin_0_countries.shp -o countries_geo.json
+shp2json ne_110m_admin_0_countries.shp | ndjson-split 'd.features' > countries.ndjson
 ```
 
+Extract the fields we need:
+```bash
+cat countries.ndjson | ndjson-map '{type: d.type, properties: {name: d.properties.name, iso_code: d.properties.iso_a2, scalerank: d.properties.scalerank}, geometry: d.geometry}' > countries_min.ndjson
+```
 
-### Convert to TopoJSON
-Reduces file size
+Convert to TopoJSON to reduce file size and
 ```bash
 # convert to TopoJSON
-geo2topo countries=countries_geo.json > countries_topo.json
+geo2topo -n countries_min.ndjson > countries_topo.json
 ```
