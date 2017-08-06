@@ -1,0 +1,10 @@
+{
+  "companies": {
+    "Ticketmaster": ["DE", "FI", "FR", "GB", "NL", "NO", "SE"],
+    "Live Nation": ["DE", "FI", "FR", "GB", "IT", "NL", "NO", "SE"]
+  },
+  "products": {
+    "Host": ["GB"],
+    "Microflex": ["DE", "FI", "FR", "GB", "IT", "NL", "NO", "SE"]
+  }
+}
