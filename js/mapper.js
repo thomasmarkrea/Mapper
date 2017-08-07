@@ -2,8 +2,7 @@ var width = 960;
 var height = 500;
 
 var select = d3.select('body')
-  .append('select')
-  .on('change', changeEvent);
+  .append('select');
 
 var svg = d3.select("body")
     .append("svg")
@@ -40,18 +39,30 @@ d3.json('data/market_data.json', function(error, data) {
   if(error) throw error;
   console.log(data);
 
-  var companies = d3.keys(data.companies);
+  var companies = data.companies;
   console.log(companies);
 
   select.selectAll('.options')
     .data(companies)
     .enter()
     .append('option')
-      .property('value', function(d, i){ return d; })
-      .text(function(d, i){ return d; });
-});
+      .property('value', function(d, i){ console.log(d); return d.name; })
+      .text(function(d, i){ return d.name; });
 
-function changeEvent(){
-  console.log(d3.event);
-  console.log(d3.event.target.value);
-}
+  select.on('change', changeEvent);
+
+  function changeEvent(){
+    svg.selectAll('path')
+      .style('fill', '#000');
+
+    companies.forEach(function(company, i){
+      if(company.name == event.target.value){
+        company.markets.forEach(function(market, i){
+          var selector = '.'+market;
+          svg.selectAll(selector)
+            .style('fill', '#009cde');
+        });
+      }
+    });
+  }
+});

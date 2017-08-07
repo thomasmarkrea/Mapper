@@ -1,10 +1,20 @@
 {
-  "companies": {
-    "Ticketmaster": ["DE", "FI", "FR", "GB", "NL", "NO", "SE"],
-    "Live Nation": ["DE", "FI", "FR", "GB", "IT", "NL", "NO", "SE"]
-  },
-  "products": {
-    "Host": ["GB"],
-    "Microflex": ["DE", "FI", "FR", "GB", "IT", "NL", "NO", "SE"]
-  }
+  "companies": [
+    {
+      "name": "Ticketmaster",
+      "markets": ["DE", "FI", "FR", "GB", "NL", "NO", "SE"]
+    }, {
+      "name": "Live Nation",
+      "markets": ["DE", "FI", "FR", "GB", "IT", "NL", "NO", "SE"]
+    }
+  ],
+  "products": [
+    {
+      "name": "Host",
+      "markets": ["GB"]
+    }, {
+      "name": "Microflex",
+      "markets": ["DE", "FI", "FR", "GB", "IT", "NL", "NO", "SE"]
+    }
+  ]
 }
