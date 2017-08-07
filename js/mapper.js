@@ -1,6 +1,15 @@
+var width = 960;
+var height = 500;
 
-var width = 960,
-    height = 500;
+var select = d3.select('body')
+  .append('select')
+  .on('change', changeEvent);
+
+var svg = d3.select("body")
+    .append("svg")
+    .attr("class", "map")
+    .attr("width", width)
+    .attr("height", height);
 
 var projection = d3.geo.naturalEarth()
     .scale(167)
@@ -10,50 +19,39 @@ var projection = d3.geo.naturalEarth()
 var path = d3.geo.path()
     .projection(projection);
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-var areas=["FR", "DE"];
-var areadata={};
-_.each(areas, function(a) {
-  areadata[a]=a.charCodeAt(0);
-});
-
-var color = d3.scale.quantize().range([
-            "rgb(198,219,239)",
-            "rgb(158,202,225)",
-            "rgb(107,174,214)",
-            "rgb(66,146,198)",
-            "rgb(33,113,181)",
-            "rgb(8,81,156)",
-            "rgb(8,48,107)"]);
-
-color.domain(d3.extent(_.toArray(areadata)));
-
 d3.json("data/countries_topo.json", function(error, countries) {
+  if(error) throw error;
   console.log(countries);
-  console.log(topojson.feature(countries, countries.objects.countries_min).features);
 
-  svg.selectAll(".countries")
-      .data(topojson.feature(countries, countries.objects.countries_min).features)
-    .enter().append("path")
-      .attr("class", function(d) { console.log(d); return d.properties.name; })
-      .attr("d", path)
-      .style("fill", function(d) {
-        var value = areadata[d.properties.iso_code];
-        if (value) {
-                return color(value);
-        } else {
-                return "#AAA";
-        }
-      })
-      .append("svg:title")
-            .attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
-            .attr("dy", ".35em")
-            .text(function (d) { return d.name; });
-  svg.append("path")
-      .datum(topojson.mesh(countries, countries.objects.countries_min))
-      .attr("class", "mesh")
+  svg.selectAll()
+    .data(topojson.feature(countries, countries.objects.countries_min_fil).features)
+    .enter()
+    .append("path")
+      .attr("class", function(d) { return d.properties.iso_code; })
       .attr("d", path);
+
+  svg.append("path")
+    .datum(topojson.mesh(countries, countries.objects.countries_min_fil, function(a, b) { return a !== b; }))
+    .attr("class", "mesh")
+    .attr("d", path);
 });
+
+d3.json('data/market_data.json', function(error, data) {
+  if(error) throw error;
+  console.log(data);
+
+  var companies = d3.keys(data.companies);
+  console.log(companies);
+
+  select.selectAll('.options')
+    .data(companies)
+    .enter()
+    .append('option')
+      .property('value', function(d, i){ return d; })
+      .text(function(d, i){ return d; });
+});
+
+function changeEvent(){
+  console.log(d3.event);
+  console.log(d3.event.target.value);
+}

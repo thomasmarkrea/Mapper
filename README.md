@@ -32,8 +32,13 @@ Extract the fields we need:
 cat countries.ndjson | ndjson-map '{type: d.type, properties: {name: d.properties.name, iso_code: d.properties.iso_a2, scalerank: d.properties.scalerank}, geometry: d.geometry}' > countries_min.ndjson
 ```
 
+Filter out Antarctica
+```bash
+cat countries_min.ndjson | ndjson-filter 'd.properties.iso_code != "AQ"' > countries_min_fil.ndjson
+```
+
 Convert to TopoJSON to reduce file size and
 ```bash
 # convert to TopoJSON
-geo2topo -n countries_min.ndjson > countries_topo.json
+geo2topo -n countries_min_fil.ndjson > countries_topo.json
 ```
