@@ -2,49 +2,65 @@
   {
     "market": "Germany",
     "iso_code": "DE",
-    "companies": ["Ticketmaster", "Live Nation", "Seatwave"],
-    "products": ["Microflex"]
+    "attributes": {
+      "companies": ["Ticketmaster", "Live Nation", "Seatwave"],
+      "products": ["Microflex"]
+    }
   },
   {
     "market": "Finland",
     "iso_code": "FI",
-    "companies": ["Ticketmaster", "Live Nation", "Seatwave"],
-    "products": ["Microflex"]
+    "attributes": {
+      "companies": ["Ticketmaster", "Live Nation", "Seatwave"],
+      "products": ["Microflex"]
+    }
   },
   {
     "market": "France",
     "iso_code": "FR",
-    "companies": ["Ticketmaster", "Live Nation", "Seatwave"],
-    "products": ["Other"]
+    "attributes": {
+      "companies": ["Ticketmaster", "Live Nation", "Seatwave"],
+      "products": ["Other"]
+    }
   },
   {
     "market": "Italy",
     "iso_code": "IT",
-    "companies": ["Live Nation", "Seatwave"],
-    "products": ["Other"]
+    "attributes": {
+      "companies": ["Live Nation", "Seatwave"],
+      "products": ["Other"]
+    }
   },
   {
     "market": "Netherlands",
     "iso_code": "NL",
-    "companies": ["Ticketmaster", "Live Nation", "Seatwave"],
-    "products": ["Microflex"]
+    "attributes": {
+      "companies": ["Ticketmaster", "Live Nation", "Seatwave"],
+      "products": ["Microflex"]
+    }
   },
   {
     "market": "Norway",
     "iso_code": "NO",
-    "companies": ["Ticketmaster", "Live Nation", "Seatwave"],
-    "products": ["Microflex"]
+    "attributes": {
+      "companies": ["Ticketmaster", "Live Nation", "Seatwave"],
+      "products": ["Microflex"]
+    }
   },
   {
     "market": "Sweden",
     "iso_code": "SE",
-    "companies": ["Ticketmaster", "Live Nation", "Seatwave"],
-    "products": ["Microflex"]
+    "attributes": {
+      "companies": ["Ticketmaster", "Live Nation", "Seatwave"],
+      "products": ["Microflex"]
+    }
   },
   {
     "market": "United Kingdom",
     "iso_code": "GB",
-    "companies": ["Ticketmaster", "Ticketweb", "Live Nation", "Get Me In", "Seatwave"],
-    "products": ["Host", "Microflex"]
+    "attributes": {
+      "companies": ["Ticketmaster", "Ticketweb", "Live Nation", "Get Me In", "Seatwave"],
+      "products": ["Host", "Microflex"]
+    }
   }
 ]
