@@ -1,3 +1,6 @@
+// TODO: use d3.dispatch to handle events?
+//       https://bl.ocks.org/mbostock/5872848
+
 // load data
 d3.queue()
 	.defer(d3.json, 'data/countries_topo.json')
@@ -10,67 +13,125 @@ function render(error, countries, market_data) {
   map(countries);
 }
 
-function unique_array(json, key) {
-  var unique_array = d3.set();
+function select(data) {
+  // create map of our market data
+  var data_map = d3.map(data);
 
-  json.each(function(v, k, m) {
-    var map = d3.map(v);
-    var set = d3.set(map.get(key));
+  // loop through data and build 'select' elements
+  var attribute_keys = set(data_map, 'key', null);
 
-    set.each(function(val) {
-      unique_array.add(val);
+  attribute_keys.each(function(key) {
+    var attribute_values = set(data_map, 'value', key);
+
+    var select = d3.select('body')
+      .append('select')
+        .attr('id', key)
+        .on('change', changeEvent);
+
+    select.selectAll()
+      .data(attribute_values.values())
+      .enter()
+      .append('option')
+        .property('value', function(d){ return d; })
+        .text(function(d){ return d; });
+  });
+
+  function changeEvent() {
+    console.log(this);
+    console.log(event);
+
+    var field = event.srcElement.id;
+    var target = event.target.value;
+
+    console.log(field);
+    console.log(target);
+
+    clear_map();
+    id_countries(data, target, key);
+
+    // companies.forEach(function(company, i){
+    //   if(company.name == event.target.value){
+    //     company.markets.forEach(function(market, i){
+    //       var selector = '.'+market;
+    //       svg.selectAll(selector)
+    //         .style('fill', '#009cde');
+    //     });
+    //   }
+    // });
+  }
+}
+
+function set(data, type, key) {
+  console.log(data);
+  console.log(type);
+  console.log(key);
+
+  var set = d3.set();
+
+  data.each(function(value) {
+    var local_set = d3.set();
+    if(type=='key') local_set = fetchAttributeKeys(value);
+    if(type=='value') local_set = fetchAttributeValues(value, key);
+
+    local_set.each(function(value) {
+      set.add(value);
     });
   });
 
-  return unique_array;
+  console.log(set);
+  return set;
 }
 
-function select(data) {
-  var data_map = d3.map(data);
+function fetchAttributeKeys(value) {
+  console.log(value);
 
-  var key = 'companies';
-  var companies = unique_array(data_map, key);
+  var attributes = value.attributes;
+  var keys = d3.keys(attributes);
+  var attribute_keys = d3.set(keys);
 
-  var select = d3.select('body')
-    .append('select');
+  console.log(attribute_keys);
+  return attribute_keys;
+}
 
-  select.selectAll('.options')
-    .data(companies.values())
-    .enter()
-    .append('option')
-      .property('value', function(d, i){ console.log(d); return d; })
-      .text(function(d, i){ return d; });
+function fetchAttributeValues(value, key) {
+  console.log(value);
+  console.log(key);
 
-  //
-  // select.on('change', changeEvent);
-  //
-  // function changeEvent(){
-  //   svg.selectAll('path')
-  //     .style('fill', '#000');
-  //
-  //   companies.forEach(function(company, i){
-  //     if(company.name == event.target.value){
-  //       company.markets.forEach(function(market, i){
-  //         var selector = '.'+market;
-  //         svg.selectAll(selector)
-  //           .style('fill', '#009cde');
-  //       });
-  //     }
-  //   });
-  // }
+  var attributes = value.attributes;
+  var attribute_values = d3.set(attributes[key]);
+
+  console.log(attribute_values);
+  return attribute_values;
+}
+
+function clear_map() {
+  var svg = d3.select('svg');
+
+  svg.selectAll('path')
+    .style('fill', '#000');
+}
+
+function id_countries(data, target, key) {
+  countries = d3.set();
+
+  data.each(function(value) {
+    var set = d3.set(data[key]);
+    if(set.has(target)) {
+
+      countries.add()
+    }
+  })
 }
 
 function map(countries) {
-  console.log(countries);
-
   var width = 960;
   var height = 500;
 
-  var svg = d3.select("body")
-      .append("svg")
-      .attr("class", "map")
-      .attr("width", width)
-      .attr("height", height);
+  var svg = d3.select('body')
+      .append('svg')
+      .attr('class', 'map')
+      .attr('width', width)
+      .attr('height', height);
 
   var projection = d3.geoNaturalEarth()
       .scale(167)
@@ -80,15 +141,18 @@ function map(countries) {
   var path = d3.geoPath()
       .projection(projection);
 
-  svg.selectAll()
-    .data(topojson.feature(countries, countries.objects.countries_min_fil).features)
-    .enter()
-    .append("path")
-      .attr("class", function(d) { return d.properties.iso_code; })
-      .attr("d", path);
+  var features = topojson.feature(countries, countries.objects.countries_min_fil).features;
+  var mesh = topojson.mesh(countries, countries.objects.countries_min_fil, function(a, b) { return a !== b; });
 
-  svg.append("path")
-    .datum(topojson.mesh(countries, countries.objects.countries_min_fil, function(a, b) { return a !== b; }))
-    .attr("class", "mesh")
-    .attr("d", path);
+  svg.selectAll()
+    .data(features)
+    .enter()
+    .append('path')
+      .attr('class', function(d) { return d.properties.iso_code; })
+      .attr('d', path);
+
+  svg.append('path')
+    .datum(mesh)
+    .attr('class', 'mesh')
+    .attr('d', path);
 }
