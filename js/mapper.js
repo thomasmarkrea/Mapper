@@ -7,7 +7,7 @@ d3.queue()
 function render(error, countries, market_data) {
   if(error) throw error;
   select(market_data);
-  // map(countries);
+  map(countries);
 }
 
 function unique_array(json, key) {
@@ -72,12 +72,12 @@ function map(countries) {
       .attr("width", width)
       .attr("height", height);
 
-  var projection = d3.geo.naturalEarth()
+  var projection = d3.geoNaturalEarth()
       .scale(167)
       .translate([width / 2, height / 2])
       .precision(0.1);
 
-  var path = d3.geo.path()
+  var path = d3.geoPath()
       .projection(projection);
 
   svg.selectAll()
