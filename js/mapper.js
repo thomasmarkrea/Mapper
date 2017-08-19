@@ -5,15 +5,24 @@
 d3.queue()
 	.defer(d3.json, 'data/countries_topo.json')
 	.defer(d3.json, 'data/market_data.json')
-	.await(render);
+	.await(startApp);
 
-function render(error, countries, market_data) {
+// set up events
+var dispatch = d3.dispatch('draw_map', 'draw_options', 'update');
+dispatch.on('draw_options', drawOptions);
+dispatch.on('draw_map', drawMap);
+dispatch.on('update', update);
+
+
+function startApp(error, countries, market_data) {
   if(error) throw error;
-  select(market_data);
-  map(countries);
+  // select(market_data);
+  // map(countries);
+  dispatch.call('draw_options', this, market_data);
+  // dispatch.call('draw_map', this, countries);
 }
 
-function select(data) {
+function drawOptions(data) {
   // create map of our market data
   var data_map = d3.map(data);
 
@@ -123,7 +132,7 @@ function id_countries(data, target, key) {
   })
 }
 
-function map(countries) {
+function drawMap(countries) {
   var width = 960;
   var height = 500;
 
