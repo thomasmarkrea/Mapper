@@ -73,8 +73,8 @@ function fetchAttributeValues(value, key) {
 }
 
 function update(data) {
-  var field = event.srcElement.id;
-  var value = event.target.value;
+  var field = d3.event.srcElement.id;
+  var value = d3.event.target.value;
   var countries = id_countries(data, field, value);
 
   clear_map();
@@ -114,7 +114,7 @@ function drawMap(countries) {
   var height = 500;
 
   var zoom = d3.zoom()
-      .on('zoom', function() { g.attr("transform", d3.event.transform); });
+      .on('zoom', zoomed);
 
   var svg = d3.select('body')
       .append('svg')
@@ -147,4 +147,9 @@ function drawMap(countries) {
     .datum(mesh)
     .attr('class', 'mesh')
     .attr('d', path);
+
+  function zoomed() {
+    g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
+    g.attr("transform", d3.event.transform);
+  }
 }
