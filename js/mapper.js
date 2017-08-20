@@ -113,11 +113,17 @@ function drawMap(countries) {
   var width = 960;
   var height = 500;
 
+  var zoom = d3.zoom()
+      .on('zoom', function() { g.attr("transform", d3.event.transform); });
+
   var svg = d3.select('body')
       .append('svg')
       .attr('class', 'map')
       .attr('width', width)
-      .attr('height', height);
+      .attr('height', height)
+      .call(zoom);
+
+  var g = svg.append('g');
 
   var projection = d3.geoNaturalEarth()
       .scale(167)
@@ -130,14 +136,14 @@ function drawMap(countries) {
   var features = topojson.feature(countries, countries.objects.countries_min_fil).features;
   var mesh = topojson.mesh(countries, countries.objects.countries_min_fil, function(a, b) { return a !== b; });
 
-  svg.selectAll()
+  g.selectAll()
     .data(features)
     .enter()
     .append('path')
       .attr('class', function(d) { return d.properties.iso_code; })
       .attr('d', path);
 
-  svg.append('path')
+  g.append('path')
     .datum(mesh)
     .attr('class', 'mesh')
     .attr('d', path);
