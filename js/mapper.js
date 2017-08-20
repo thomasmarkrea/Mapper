@@ -10,18 +10,16 @@ dispatch.on('draw_options', drawOptions);
 dispatch.on('draw_map', drawMap);
 dispatch.on('update', update);
 
-
+// dispatch events that render the app
 function startApp(error, countries, market_data) {
   if(error) throw error;
   dispatch.call('draw_options', this, market_data);
   dispatch.call('draw_map', this, countries);
 }
 
+// render select elements
 function drawOptions(data) {
-  // create map of our market data
   var data_map = d3.map(data);
-
-  // loop through data and build 'select' elements
   var attribute_keys = set(data_map, 'key', null);
 
   attribute_keys.each(function(key) {
@@ -41,6 +39,7 @@ function drawOptions(data) {
   });
 }
 
+// create a set of values or keys from an object
 function set(data, type, key) {
   var set = d3.set();
 
@@ -57,6 +56,7 @@ function set(data, type, key) {
   return set;
 }
 
+// returns keys from an object
 function fetchAttributeKeys(value) {
   var attributes = value.attributes;
   var keys = d3.keys(attributes);
@@ -65,6 +65,7 @@ function fetchAttributeKeys(value) {
   return attribute_keys;
 }
 
+// returns values from an object
 function fetchAttributeValues(value, key) {
   var attributes = value.attributes;
   var attribute_values = d3.set(attributes[key]);
@@ -72,6 +73,7 @@ function fetchAttributeValues(value, key) {
   return attribute_values;
 }
 
+// clears map then colours selected countries
 function update(data) {
   var field = d3.event.srcElement.id;
   var value = d3.event.target.value;
@@ -81,6 +83,7 @@ function update(data) {
   colour_map(countries);
 }
 
+// returns all countries that match the selected option
 function id_countries(data, field, value) {
   countries = d3.set();
 
@@ -92,6 +95,7 @@ function id_countries(data, field, value) {
   return countries;
 }
 
+// resets all countries back to their default colour
 function clear_map() {
   var svg = d3.select('svg');
 
@@ -99,6 +103,7 @@ function clear_map() {
     .style('fill', '#000');
 }
 
+// colours the selected countries
 function colour_map(countries) {
   var svg = d3.select('svg');
 
@@ -109,6 +114,7 @@ function colour_map(countries) {
   });
 }
 
+// render map
 function drawMap(countries) {
   var width = 960;
   var height = 500;
