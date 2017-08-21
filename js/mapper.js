@@ -11,10 +11,10 @@ dispatch.on('draw_map', drawMap);
 dispatch.on('update', update);
 
 // dispatch events that render the app
-function startApp(error, countries, market_data) {
+function startApp(error, countries_data, market_data) {
   if(error) throw error;
   dispatch.call('draw_options', this, market_data);
-  dispatch.call('draw_map', this, countries);
+  dispatch.call('draw_map', this, countries_data);
 }
 
 // render select elements
@@ -115,7 +115,7 @@ function colour_map(countries) {
 }
 
 // render map
-function drawMap(countries) {
+function drawMap(data) {
   var width = 960;
   var height = 500;
 
@@ -139,18 +139,18 @@ function drawMap(countries) {
   var path = d3.geoPath()
       .projection(projection);
 
-  var features = topojson.feature(countries, countries.objects.countries_min_fil).features;
-  var mesh = topojson.mesh(countries, countries.objects.countries_min_fil, function(a, b) { return a !== b; });
+  var countries = topojson.feature(data, data.objects.countries_min_fil).features;
+  var borders = topojson.mesh(data, data.objects.countries_min_fil, function(a, b) { return a !== b; });
 
   g.selectAll()
-    .data(features)
+    .data(countries)
     .enter()
     .append('path')
       .attr('class', function(d) { return d.properties.iso_code; })
       .attr('d', path);
 
   g.append('path')
-    .datum(mesh)
+    .datum(borders)
     .attr('class', 'mesh')
     .attr('d', path);
 
