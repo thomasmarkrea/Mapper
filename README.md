@@ -37,8 +37,7 @@ Filter out Antarctica
 cat countries_min.ndjson | ndjson-filter 'd.properties.iso_code != "AQ"' > countries_min_fil.ndjson
 ```
 
-Convert to TopoJSON to reduce file size and
+Convert to TopoJSON to reduce file size
 ```bash
-# convert to TopoJSON
 geo2topo -n countries_min_fil.ndjson > countries_topo.json
 ```
